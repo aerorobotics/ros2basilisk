@@ -1,0 +1,5 @@
+scipy
+control
+kepler.py
+pyshtools
+pymap3d

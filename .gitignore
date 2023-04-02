@@ -1,0 +1,18 @@
+log/
+build/
+install/
+data/*
+.vscode/
+.idea/
+_VizFiles/*
+__pycache__
+*.code-workspace
+
+# ignore most files in launch except the designated default
+# launch/
+# !launch/ros2basilisk_launch.py
+
+
+# ignore most config in launch except the designated default
+config/*
+!config/default_config.yaml

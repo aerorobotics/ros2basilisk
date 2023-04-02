@@ -1,0 +1,131 @@
+
+#################################################################
+# ros_baslisk/basilisk_sim_node.py
+# For spacecraft proper 
+# Thruster convention is defined in Basilisk thrusterFactory
+#################################################################
+bsk_config:
+  sc_configs:
+    agent0:
+      mHub: 500.0 # mass
+      r_BcB_B: [0.0, 0.0, 0.0] # [m] vector from point B to CoM of hub in B frame component
+      IHubPntBc_B: [9., 0., 0., 0., 8., 0., 0., 0., 6.] # inertia matrix
+      thrusters:
+        - thrusterType: "MOOG_Monarc_22_6"
+          r_B: [0.0, 0.0, 0.0]     # vector with thruster location in B-frame components
+          tHat_B: [0.0, 0.0, 1.0]  # vector with thruster force direction unit vector
+      reaction_wheels:
+        - type: "Honeywell_HR16"
+          gsHat_B: [1,0,0]
+          maxMomentum: 50.0
+          Omega: 100.0
+        - type: "Honeywell_HR16"
+          gsHat_B: [0,1,0]
+          maxMomentum: 50.0
+          Omega: 100.0
+        - type: "Honeywell_HR16"
+          gsHat_B: [0,0,1]
+          maxMomentum: 50.0
+          Omega: 100.0
+      orbit:
+        initMethod: "orbital_elements"
+        a: 1.1e+7 # [m]
+        e: 0.0    #
+        i: 0.0
+        Omega: 0.0 # [rad]
+        omega: 0.0 # [rad]
+        M: 0.0
+      sigma_BNInit: [0.0, 0.0, 0.0]
+      omega_BN_BInit: [0.0, 0.0, 0.0]
+    agent1:
+      mHub: 500.0
+      r_BcB_B: [0.0, 0.0, 0.0]
+      IHubPntBc_B: [9., 0., 0., 0., 8., 0., 0., 0., 6.] # inertia matrix
+      thrusters:
+        - thrusterType: "MOOG_Monarc_22_6"
+          r_B: [0.0, 0.0, 0.0]     # vector with thruster location in B-frame components
+          tHat_B: [0.0, 0.0, 1.0]  # vector with thruster force direction unit vector
+      reaction_wheels:
+        - type: "Honeywell_HR16"
+          gsHat_B: [1,0,0]
+          maxMomentum: 50.0
+          Omega: 100.0
+        - type: "Honeywell_HR16"
+          gsHat_B: [0,1,0]
+          maxMomentum: 50.0
+          Omega: 100.0
+        - type: "Honeywell_HR16"
+          gsHat_B: [0,0,1]
+          maxMomentum: 50.0
+          Omega: 100.0
+      orbit:
+        initMethod: "orbital_elements"
+        a: 1.1e+7 # [m]
+        e: 0.0    #
+        i: 0.0
+        Omega: 0.0 # [rad]
+        omega: 0.0 # [rad]
+        M: 1.818E-5 # 20 m = 1.818E-6 when a=1.1+7
+      sigma_BNInit: [0.0, 0.0, 0.0]
+      omega_BN_BInit: [0.0, 0.0, 0.0]
+
+
+#################################################################
+# SimpleNav.py
+#################################################################
+
+simpleNav_config:
+  timeStep: 0.2   # [s] rate of running navigation code. This controls the rate of other modules must be N*bsk_config.timeStep
+  timeRef:  0.0
+  timeTol: 1.0E-6 # [s] timing tolerance to determine if the msg is synchronized
+
+
+#################################################################
+# FormationControl.py
+#################################################################
+
+lqr_config:
+  dtLqr:   150.0   # [s] outer rate of 
+  timeRef: 0.0    # [s]
+  timeTol: 1.0E-6 # [s] timing tolerance to determine if the msg is synchronized
+  timeAttConv: 50.0 # [s] time it takes for attitude control to converge. Must be less than dt_lqr
+  semiMajoInit: 1.1e+7 # [m] semi-major axis of both spacecraft
+  scMass: 500.0
+  thrMaxThrust: 22.0 #[N]
+  thrusters:
+    - thrusterType: "MOOG_Monarc_22_6"
+      r_B: [0.0, 0.0, 0.0]     # vector with thruster location in B-frame components
+      tHat_B: [0.0, 0.0, 1.0]  # vector with thruster force direction unit vector
+
+#################################################################
+# AttitudeCtrlAllocNode.py
+#################################################################
+adcs_config:
+  agent0:
+    reaction_wheels:
+      - type: "Honeywell_HR16"
+        gsHat_B: [1,0,0]
+        maxMomentum: 50.0
+        Omega: 100.0
+      - type: "Honeywell_HR16"
+        gsHat_B: [0,1,0]
+        maxMomentum: 50.0
+        Omega: 100.0
+      - type: "Honeywell_HR16"
+        gsHat_B: [0,0,1]
+        maxMomentum: 50.0
+        Omega: 100.0
+  agent1:
+    reaction_wheels:
+      - type: "Honeywell_HR16"
+        gsHat_B: [1,0,0]
+        maxMomentum: 50.0
+        Omega: 100.0
+      - type: "Honeywell_HR16"
+        gsHat_B: [0,1,0]
+        maxMomentum: 50.0
+        Omega: 100.0
+      - type: "Honeywell_HR16"
+        gsHat_B: [0,0,1]
+        maxMomentum: 50.0
+        Omega: 100.0
