@@ -63,6 +63,14 @@ This is same as creating a ROS2 message.
 
 ## Citation
 
+If you use this repository, please make sure to cite our work.
+@inproceedings{matsuka2023high,
+  title={High-Fidelity, Closed-Loop Simulation of Spacecraft Vision-Based Relative Navigation in ROS2},
+  author={Matsuka, Kai and Zhang, Leo and Ragheb, Isabelle and Ohenzuwa, Christine and Chung, Soon-Jo},
+  year={2023},
+  publisher={AIAA},
+  booktitle={2023 33rd AAS/AIAA Space Flight Mechanics Meeting}
+}
 This work was presented at 33rd AAS/AII Space Flight Mechanics Meeting in a paper titled "High-fidelity, closed-loop simulation of spacecraft vision-based relative navigation in ROS2." Our paper can be found [here](docs/AAS_Flight_Mechanics_2023_Paper.pdf).
 
 
