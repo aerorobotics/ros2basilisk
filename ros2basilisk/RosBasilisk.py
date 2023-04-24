@@ -81,7 +81,9 @@ class RosBasilisk(Node):
         self.agent2thrustDeque = {}
         for name in self.agent_names:
             self.agent2thrustDeque[name] = deque() # add empty deque
-            thr_listner= lambda msg : self.thrust_subscribe_callback(msg, name)
+            # 'name = name' is needed to avoid override
+            # see https://stackoverflow.com/questions/50298582/why-does-python-asyncio-loop-call-soon-overwrite-data
+            thr_listner= lambda msg, name=name : self.thrust_subscribe_callback(msg, name)
             self.thrust_ros_subscribers[name] = self.create_subscription(
                 ThrustCmd, "/"+name+"/thr_cmd", thr_listner, 3 )
 
@@ -90,10 +92,10 @@ class RosBasilisk(Node):
         self.agent2torqueDeque = {}
         for name in self.agent_names:
             self.agent2torqueDeque[name] = deque()
-            torque_listner = lambda msg : self.torque_subscribe_callback(msg, name)
+            torque_listner = lambda msg, name=name: self.torque_subscribe_callback(msg, name)
             self.torque_ros_subscribers[name] = self.create_subscription(
                 RWTorque, "/"+name+"/rw_torque_cmd", torque_listner, 3 )
-        
+
         #################################################
         # Initialize 
         # - Basilisk Dynamics Simulation
@@ -146,19 +148,21 @@ class RosBasilisk(Node):
             self.get_logger().debug("Applying thrust")
             self.bsk_sim.bsk_task.write_thrust_msg(name, thr_msg_ros, current_time_ns)  
         
-        
         for name in self.agent_names: 
             # handle message queue
             num_rw_msg = len(self.agent2torqueDeque[name])
+            print(name, ", line0")
             if num_rw_msg == 0:
                 self.get_logger().debug("No RWS cmd for " + name )
+                print("No RWS cmd for " + name)
                 continue
             elif num_rw_msg >1:
                 self.get_logger().debug("More than one RWS cmd for" + name)
             while self.agent2torqueDeque[name]:
                 torque_msg_ros = self.agent2torqueDeque[name].popleft()
-
+            
             self.get_logger().debug(f"Applying RW Torque")
+            print("Hello, name: ", name, ", current_time_ns: ", current_time_ns/(10**9))
             self.bsk_sim.bsk_task.write_rw_torque_msg(name,torque_msg_ros,current_time_ns)
             
         # propagate simulatin up to the new sim_t
