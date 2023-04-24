@@ -10,7 +10,7 @@ from rclpy.node import Node
 from ros2basilisk.msg import SCStates
 
 # custom utility
-from utilitiy import is_key_frame, copy_SCStates
+from utility import is_key_frame, copy_SCStates
 from helper_fns.utility import yamlLoad, stamp2time
 
 class SimpleNav(Node):

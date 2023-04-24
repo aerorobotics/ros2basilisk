@@ -12,7 +12,7 @@ from message_filters import TimeSynchronizer, Subscriber
 from ros2basilisk.msg import SCStates, ThrustCmd, AttGuid
 
 # custom utility
-from utilitiy import is_key_frame
+from utility import is_key_frame
 
 from scipy.spatial.transform import Rotation as R
 from helper_fns.lqr import Lqr, get_attitude_thrust

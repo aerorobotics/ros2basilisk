@@ -51,7 +51,7 @@ install(PROGRAMS
   algorithm_base/AttitudeCtrlAllocNode.py
   algorithm_base/FormationControl.py
   algorithm_base/SimpleNav.py
-  algorithm_base/utilitiy.py
+  algorithm_base/utility.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
