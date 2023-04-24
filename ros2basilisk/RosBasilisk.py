@@ -151,10 +151,8 @@ class RosBasilisk(Node):
         for name in self.agent_names: 
             # handle message queue
             num_rw_msg = len(self.agent2torqueDeque[name])
-            print(name, ", line0")
             if num_rw_msg == 0:
                 self.get_logger().debug("No RWS cmd for " + name )
-                print("No RWS cmd for " + name)
                 continue
             elif num_rw_msg >1:
                 self.get_logger().debug("More than one RWS cmd for" + name)
@@ -162,7 +160,6 @@ class RosBasilisk(Node):
                 torque_msg_ros = self.agent2torqueDeque[name].popleft()
             
             self.get_logger().debug(f"Applying RW Torque")
-            print("Hello, name: ", name, ", current_time_ns: ", current_time_ns/(10**9))
             self.bsk_sim.bsk_task.write_rw_torque_msg(name,torque_msg_ros,current_time_ns)
             
         # propagate simulatin up to the new sim_t
