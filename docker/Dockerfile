@@ -3,7 +3,8 @@ LABEL maintainer="lzhang3@caltech.edu"
 
 # update & install Basilisk pre-reqs
 RUN apt-get update && apt-get install -y \
-    git python3-tk  python3-pip  python3.8-venv swig tmux python3-colcon-common-extensions \
+    git python3-tk  python3-pip  python3.8-venv swig python3-colcon-common-extensions \
+    tmux sudo \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y ros-galactic-rviz2
