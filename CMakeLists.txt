@@ -11,6 +11,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
+# find_package(opencv2 REQUIRED)
 
 # for interfaces
 find_package(std_msgs REQUIRED)
@@ -51,6 +52,7 @@ install(PROGRAMS
   algorithm_base/AttitudeCtrlAllocNode.py
   algorithm_base/AttPublisher.py
   algorithm_base/FormationControl.py
+  algorithm_base/ImgPublisher.py
   algorithm_base/PointingGuidance.py
   algorithm_base/PosPublisher.py
   algorithm_base/SimpleNav.py

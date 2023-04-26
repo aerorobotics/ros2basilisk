@@ -65,9 +65,10 @@ class PosPublisher(Node):
             self.timer = self.create_timer(timer_period, self.timer_callback)
             
         elif gt_source == "SIM":
-            
             self.state_sub = self.create_subscription(SCStates, '/sc_name/bsk_state_gt', self.sub_callback, 3)
-            
+        else:
+            raise ValueError("invalid 'source' parameter is selected")
+        
         return
 
     def timer_callback(self) -> None:
