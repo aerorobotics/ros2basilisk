@@ -49,7 +49,10 @@ install(PROGRAMS
   ros2basilisk/RosBskTask.py
   # algorithms
   algorithm_base/AttitudeCtrlAllocNode.py
+  algorithm_base/AttPublisher.py
   algorithm_base/FormationControl.py
+  algorithm_base/PointingGuidance.py
+  algorithm_base/PosPublisher.py
   algorithm_base/SimpleNav.py
   algorithm_base/utility.py
   DESTINATION lib/${PROJECT_NAME}

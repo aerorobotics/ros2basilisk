@@ -29,7 +29,7 @@ class MrpAttitudeControlAlloc(Node):
         self.declare_parameter("Kp", 10.0)
         self.declare_parameter("Kd", 100.0)
         self.declare_parameter("save_debug", False)
-        self.declare_parameter("output_dir", "/home/ubuntu/example_ws/data/runs/lqr_default/mrp_ctrl/")
+        self.declare_parameter("output_dir", "data/runs/lqr_default/mrp_ctrl/")
         
         # load ADCS config file
         self.sc_name = self.get_parameter('sc_name').get_parameter_value().string_value
@@ -58,7 +58,8 @@ class MrpAttitudeControlAlloc(Node):
         self.att_des = None # initialize desired attitude as identity
         
         if self.save_debug:
-            self.output_dir = self.get_parameter('output_dir').get_parameter_value().string_value
+            output_subpath = self.get_parameter('output_dir').get_parameter_value().string_value
+            self.output_dir = os.path.join(ws, output_subpath)
             if not os.path.exists(self.output_dir):
                 self.get_logger().info("MRP control debug output directory does not exist. Creating: " + self.output_dir)
                 os.mkdir(self.output_dir)
@@ -80,7 +81,7 @@ class MrpAttitudeControlAlloc(Node):
         """
         
         if self.att_des is None:
-            return # attitude target is not initialized yet
+            return # attitude desired value is not initialized yet
         
         # compute overall torque required in body frame
         torque_b = self.controller.update(state_msg.sigma_bn, state_msg.omega_bn_b, self.att_des)
@@ -108,7 +109,7 @@ def main(args=None):
         rclpy.spin(att_ctrl)
     except KeyboardInterrupt:
         if att_ctrl.save_debug:
-            jsonDump(att_ctrl.out, att_ctrl.output_dir+"mrp_ctrl_alloc.json")
+            jsonDump(att_ctrl.out, att_ctrl.output_dir + att_ctrl.sc_name + "_mrp_ctrl_alloc.json")
         att_ctrl.destroy_node() # Destroy the node explicitly
         rclpy.shutdown()
 

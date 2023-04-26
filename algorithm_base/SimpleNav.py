@@ -25,17 +25,15 @@ class SimpleNav(Node):
         super().__init__("SimpleNav")
 
         # load parameters
-        self.declare_parameter("workspace_dir", "/home/ubuntu/example_ws/")
-        self.declare_parameter("config_yaml", "src/ros2basilisk/config/lqr_config.yaml")
-        ws = self.get_parameter('workspace_dir').get_parameter_value().string_value
-        yaml_path = self.get_parameter('config_yaml').get_parameter_value().string_value
-        config = yamlLoad(ws + yaml_path)
-        nav_config = config["simpleNav_config"]
-
-        self.time_ref = nav_config["timeRef"]   # seconds
-        self.dt_nav   = nav_config["timeStep"]  # seconds
-        self.tol      = nav_config["timeTol"]   # tolerance
+        self.declare_parameter("timeRef", 0.0) # make sure seed doesn't match other node
+        self.declare_parameter("timeStep", 0.2) # make sure seed doesn't match other node
+        self.declare_parameter("timeTol", 1.0E-6) # make sure seed doesn't match other node
+        
+        self.time_ref = self.get_parameter('timeRef').value   # seconds
+        self.dt_nav   = self.get_parameter('timeStep').value
+        self.tol      = self.get_parameter('timeTol').value
         self.counter = 0
+
 
         # subscriber / publisher
         self.state_gt_subscriber = self.create_subscription(SCStates, 'sc_name/bsk_state_gt', self.callback, 3)
