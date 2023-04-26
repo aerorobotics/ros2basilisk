@@ -145,6 +145,8 @@ class Simulation():
             orbit_config =  sc_configs[agent_name]["orbit"]
             if orbit_config["initMethod"] == "orbital_elements":
                 self.init_orbit_from_oe(scObjects[agent_name], orbit_config, mu)
+            elif orbit_config["initMethod"] == "pro":
+                self.init_orbit_from_pro(scObjects[agent_name], orbit_config, mu)
             else:
                 raise ValueError("please sepcify correct orbit.initMethod")
             scObjects[agent_name].hub.sigma_BNInit = [[sc_configs[agent_name]["sigma_BNInit"][0]],
@@ -194,7 +196,44 @@ class Simulation():
         ecc_anom = orbitalMotion.M2E(mean_anom, oe.e)
         oe.f = orbitalMotion.E2f(ecc_anom, oe.e)
         rN, vN = orbitalMotion.elem2rv(mu, oe)
-        orbitalMotion.rv2elem(mu, rN, vN)
+        scObject.hub.r_CN_NInit = rN  # m
+        scObject.hub.v_CN_NInit = vN  # m/s
+
+    def init_orbit_from_pro(self, scObject, orbit_config, mu):
+        
+        # refernece orbit in ECI
+        oe = orbitalMotion.ClassicElements()
+        oe.a = orbit_config["a"]
+        oe.e = orbit_config["e"]
+        oe.i = orbit_config["i"]
+        oe.Omega = orbit_config["Omega"]
+        oe.omega = orbit_config["omega"]
+        mean_anom = orbit_config["M"]
+        ecc_anom = orbitalMotion.M2E(mean_anom, oe.e)
+        oe.f = orbitalMotion.E2f(ecc_anom, oe.e)
+        rN_ref, vN_ref = orbitalMotion.elem2rv(mu, oe)
+
+        # get mean motion
+        angMom = np.cross(rN_ref, vN_ref) 
+        omega = angMom/np.linalg.norm(rN_ref)**2
+        n = np.linalg.norm(omega) # mean motion
+
+        # compute relative positions & velocities in LVLH
+        # from the geometry of passive relative orbit
+        A = orbit_config["A"]
+        B = orbit_config["B"]
+        alph = orbit_config["alpha"]
+        beta = orbit_config["beta"]
+        yoff = orbit_config["yoff"]
+        rL = np.array([A*np.cos(alph),
+                       -2*A*np.sin(alph)+yoff,
+                        B*np.cos(beta)]) 
+        vL = np.array([-n*A*np.sin(alph),
+                       -2*n*A*np.cos(alph),
+                       -n*B*np.sin(beta)])
+        
+        # conver to inertial (absolute) pos vel
+        rN, vN = orbitalMotion.hill2rv(rN_ref, vN_ref, rL, vL)
         scObject.hub.r_CN_NInit = rN  # m
         scObject.hub.v_CN_NInit = vN  # m/s
         
